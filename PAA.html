@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Spasial Perkotaan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="ui-panel">
+        <h2>Peta Spasial Perkotaan</h2>
+        
+        <div class="vehicle-selector">
+            <button class="vehicle-btn" onclick="gantiKendaraan('mobil')">🚗 Mobil</button>
+            <button class="vehicle-btn" onclick="gantiKendaraan('motor')">🏍️ Motor</button>
+            <button class="vehicle-btn" onclick="gantiKendaraan('sepeda')">🚲 Sepeda</button>
+        </div>
+
+        <div class="info-row">
+            <span>Status:</span>
+            <span id="status-val">Pilih Titik Start</span>
+        </div>
+        <div class="info-row">
+            <span>Jarak Rute:</span>
+            <span><span id="jarak-val">0</span> meter</span>
+        </div>
+        <div class="info-row">
+            <span>Zoom:</span>
+            <span><span id="zoom-val">0.8</span>x</span>
+        </div>
+
+        <div class="btn-group">
+            <button id="btn-start-pause"> MULAI </button>
+            <button id="btn-acak-map"> ACAK MAP</button>
+            <button id="btn-reset"> RESET </button>
+        </div>
+    </div>
+
+    <canvas id="mapCanvas"></canvas>
+    <script src="script.js"></script>
+
+</body>
+</html>
