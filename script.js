@@ -633,4 +633,24 @@
             draw();
         });
 
-        
+        window.gantiKendaraan = function(tipe) { navigation.objectType = tipe; draw(); };
+        document.getElementById('btn-acak-map').addEventListener('click', generateCityMap);
+        document.getElementById('btn-reset').addEventListener('click', () => { resetNavigation(); draw(); });
+        document.getElementById('btn-start-pause').addEventListener('click', () => {
+            if(navigation.startPos && navigation.endPos && navigation.waypoints.length > 0) {
+                navigation.isActive = !navigation.isActive;
+                const btn = document.getElementById('btn-start-pause');
+                if (navigation.isActive) {
+                    btn.innerText = "PAUSE";
+                    btn.classList.add('paused');
+                    document.getElementById('status-val').innerText = "Simulasi Berjalan...";
+                } else {
+                    btn.innerText = "MULAI";
+                    btn.classList.remove('paused');
+                    document.getElementById('status-val').innerText = "Simulasi Pause.";
+                }
+            }
+        });
+
+        generateCityMap();
+        requestAnimationFrame(animationLoop);
