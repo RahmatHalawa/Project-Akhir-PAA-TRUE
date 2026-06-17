@@ -627,7 +627,11 @@
             }
         });
 
-        
+        window.addEventListener('wheel', (e) => {
+            if (e.deltaY < 0) camera.zoom = Math.min(camera.zoom + 0.1, 2.5); else camera.zoom = Math.max(camera.zoom - 0.1, 0.4);
+            document.getElementById('zoom-val').innerText = camera.zoom.toFixed(1);
+            draw();
+        });
 
         window.gantiKendaraan = function(tipe) { navigation.objectType = tipe; draw(); };
         document.getElementById('btn-acak-map').addEventListener('click', generateCityMap);
