@@ -1,7 +1,5 @@
         const canvas = document.getElementById('mapCanvas');
         const ctx = canvas.getContext('2d');
-
-        // State Delta Time untuk sinkronisasi frame rate
         let lastTime = performance.now();
 
         canvas.width = window.innerWidth;
@@ -14,7 +12,6 @@
         });
 
 
-        // CONFIGURASI & STATE UTAMA
         let camera = { x: 0, y: 0, zoom: 0.8, isDragging: false, startX: 0, startY: 0, hasDragged: false };
         let nodes = []; 
         let edges = []; 
@@ -164,7 +161,6 @@
             return false;
         }
 
-        // GENERATOR KOTA
         function generateCityMap() {
             nodes = []; edges = []; bundaranList = []; rukoComplexes = []; vegetation = []; gangRoads = [];
             resetNavigation();
@@ -305,7 +301,6 @@
             document.getElementById('btn-start-pause').classList.remove('paused');
         }
 
-        // ROUTING & ENGINE SIMULASI
         function hitungPanjangEdge(edge) {
             let totalLength = 0; let pPrev = nodes[edge.from];
             for (let i = 1; i <= 100; i++) {
@@ -460,28 +455,19 @@
             camera.y += (targetCamY - camera.y) * Math.min(1, 0.08 * dtMultiplier);
         }
 
-        // ENGINE GRAPHICS CANVAS RENDER
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2); ctx.scale(camera.zoom, camera.zoom);
             ctx.translate(-canvas.width / 2 + camera.x, -canvas.height / 2 + camera.y);
-
-            // 1. Lapangan Hijau Dasar
             ctx.fillStyle = KOTA_COLOR.tanahRumput; ctx.fillRect(-3000, -3000, 8000, 8000);
-
-            // 2. Pondasi Struktur Jalan Utama & Persimpangan Bundaran
             ctx.strokeStyle = "#4b5563"; ctx.lineWidth = 42; ctx.lineJoin = "round"; ctx.lineCap = "round";
             edges.forEach(edge => { ctx.beginPath(); ctx.moveTo(nodes[edge.from].x, nodes[edge.from].y); ctx.bezierCurveTo(edge.ctrl1.x, edge.ctrl1.y, edge.ctrl2.x, edge.ctrl2.y, nodes[edge.to].x, nodes[edge.to].y); ctx.stroke(); });
             bundaranList.forEach(b => { ctx.fillStyle = "#4b5563"; ctx.beginPath(); ctx.arc(b.x, b.y, b.radiusLuar + 2, 0, Math.PI * 2); ctx.fill(); });
-
-            // 3. Aspal Hitam Jalan Gang Komplek Perumahan
             ctx.save();
             ctx.strokeStyle = KOTA_COLOR.aspal; ctx.lineWidth = 14; ctx.lineCap = "round"; ctx.lineJoin = "round";
             gangRoads.forEach(gang => { ctx.beginPath(); ctx.moveTo(gang.x1, gang.y1); ctx.lineTo(gang.x2, gang.y2); ctx.stroke(); });
             ctx.restore();
-
-            // 4. Penghubung Aspal Kecil Akses Rumah
             ctx.save();
             ctx.strokeStyle = KOTA_COLOR.aspal; ctx.lineWidth = 8; ctx.lineCap = "round";
             rukoComplexes.forEach(comp => {
@@ -489,12 +475,9 @@
             });
             ctx.restore();
 
-            // 5. Permukaan Utama Aspal Jalan Utama Raya
             ctx.strokeStyle = KOTA_COLOR.aspal; ctx.lineWidth = 28; ctx.lineJoin = "round"; ctx.lineCap = "round";
             edges.forEach(edge => { ctx.beginPath(); ctx.moveTo(nodes[edge.from].x, nodes[edge.from].y); ctx.bezierCurveTo(edge.ctrl1.x, edge.ctrl1.y, edge.ctrl2.x, edge.ctrl2.y, nodes[edge.to].x, nodes[edge.to].y); ctx.stroke(); });
             bundaranList.forEach(b => { ctx.fillStyle = KOTA_COLOR.aspal; ctx.beginPath(); ctx.arc(b.x, b.y, b.radiusLuar - 2, 0, Math.PI * 2); ctx.fill(); });
-
-            // 6. Garis Putus Marka Jalan Tengah
             ctx.strokeStyle = KOTA_COLOR.markaPutih; ctx.lineWidth = 1.2; ctx.setLineDash([8, 12]);
             edges.forEach(edge => { 
                 ctx.beginPath(); let started = false;
@@ -510,7 +493,6 @@
             });
             ctx.setLineDash([]); 
 
-            // 7. Bundaran Tengah Kota & Kastin Pulau Taman
             bundaranList.forEach(b => { 
                 ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.arc(b.x, b.y, b.radiusTaman + 1.2, 0, Math.PI * 2); ctx.fill(); 
                 
@@ -529,7 +511,6 @@
                 ctx.fillStyle = "#27ae60"; ctx.beginPath(); ctx.arc(b.x, b.y, b.radiusTaman, 0, Math.PI * 2); ctx.fill(); 
             });
 
-            // 8. Komponen Tata Ruang Gedung & Lahan Parkir Teratur
             rukoComplexes.forEach(comp => {
                 ctx.save(); ctx.translate(comp.x, comp.y); ctx.rotate(comp.sisi + Math.PI/2); 
                 
@@ -570,7 +551,7 @@
                 ctx.restore();
             });
 
-            // 9. Penghijauan (Vegetasi Pohon)
+     
             vegetation.forEach(v => {
                 ctx.save(); ctx.translate(v.x, v.y); ctx.fillStyle = "rgba(0,0,0,0.15)"; ctx.beginPath(); ctx.arc(v.radius*0.2, v.radius*0.2, v.radius, 0, Math.PI * 2); ctx.fill();
                 ctx.fillStyle = KOTA_COLOR.batangPohon; ctx.fillRect(-v.radius*0.15, -v.radius*0.15, v.radius*0.3, v.radius*0.3);
@@ -578,11 +559,9 @@
                 ctx.fillStyle = KOTA_COLOR.daunPohonMuda; ctx.beginPath(); ctx.arc(-v.radius*0.15, -v.radius*0.15, v.radius*0.68, 0, Math.PI * 2); ctx.fill(); ctx.restore();
             });
 
-            // 10. Pin Navigasi Peta
+       
             if (navigation.startPos) { ctx.fillStyle = "#3498db"; ctx.beginPath(); ctx.arc(navigation.startPos.x, navigation.startPos.y, 7, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5; ctx.stroke(); }
             if (navigation.endPos) { ctx.fillStyle = "#e74c3c"; ctx.beginPath(); ctx.arc(navigation.endPos.x, navigation.endPos.y, 7, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5; ctx.stroke(); }
-
-            // 11. Unit Objek Bergerak Simulasi
             if (navigation.startPos) {
                 ctx.save(); ctx.translate(navigation.objX, navigation.objY); ctx.rotate(navigation.objAngle);
                 switch(navigation.objectType) {
@@ -595,7 +574,6 @@
             ctx.restore();
         }
 
-        // Penanganan Animasi Utama Berbasis Timestamp
         function animationLoop(timestamp) { 
             let dt = timestamp - lastTime;
             lastTime = timestamp;
@@ -607,7 +585,6 @@
             requestAnimationFrame(animationLoop); 
         }
 
-        // KONTROL DRAG, ZOOM, & NAVIGASI
         canvas.addEventListener('mousedown', (e) => { camera.isDragging = true; camera.hasDragged = false; camera.startX = e.clientX - camera.x; camera.startY = e.clientY - camera.y; });
         canvas.addEventListener('mousemove', (e) => { 
             if (!camera.isDragging) return; 
