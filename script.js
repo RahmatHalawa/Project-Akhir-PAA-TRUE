@@ -585,14 +585,7 @@
             requestAnimationFrame(animationLoop); 
         }
 
-        canvas.addEventListener('mousedown', (e) => { camera.isDragging = true; camera.hasDragged = false; camera.startX = e.clientX - camera.x; camera.startY = e.clientY - camera.y; });
-        canvas.addEventListener('mousemove', (e) => { 
-            if (!camera.isDragging) return; 
-            camera.x = e.clientX - camera.startX; 
-            camera.y = e.clientY - camera.startY; 
-            camera.hasDragged = true; 
-            draw();
-        });
+        
         canvas.addEventListener('mouseup', (e) => {
             camera.isDragging = false;
             if (!camera.hasDragged) {
